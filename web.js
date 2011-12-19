@@ -57,23 +57,57 @@ function summary(str, max) {
   return result;
 }
 
+function slugify(s) {
+  var _slugify_strip_re = /[^\w\s-]/g;
+  var _slugify_hyphenate_re = /[-\s]+/g;
+  s = s.replace(_slugify_strip_re, '').trim().toLowerCase();
+  s = s.replace(_slugify_hyphenate_re, '-');
+  return s;
+}
+
+var TITLE = "grinfo.net",
+    CACHE_TIMES = 100;
+
 app.get('/', function(request, response) {
-  db("home", function(key) {
-    var ctx = {
-      title: "grinfo.net",
-    };
+  db("boards", function(key) {
     trello.get("grinfo", function(boards) {
-      boards.forEach(function(board) {
-        board.desc_html = md.toHTML(summary(board.desc, 30));
-      });
-      ctx.boards = boards;
-      render("./templates/index.html", ctx, function(html) {
-        db.save(key, html);
+      db.save(key, boards);
+    });
+  }, function(boards){
+    var ctx = {
+      title: TITLE,
+    };
+    boards.forEach(function(board) {
+      board.desc_html = md.toHTML(summary(board.desc, 30));
+      board.slug_name = slugify(board.name);
+    });
+    ctx.boards = boards;
+    render("./templates/index.html", ctx, function(html) {
+      response.send(html); 
+    });
+  }, CACHE_TIMES);
+});
+
+app.get('/project/:id/:slug?', function(request, response) {
+  var id = request.params.id;
+  db("boards", function(key) {
+    trello.get("grinfo", function(boards) {
+      db.save(key, boards);
+    });
+  }, function(boards) {
+    var ctx = {
+      title: TITLE,
+    };
+    boards.forEach(function(board) {
+      if(board["_id"] !== id) return;
+      board.desc_html = md.toHTML(board.desc);
+      ctx.board = board;
+      ctx.title = board.name + " - " + ctx.title;
+      render("./templates/project.html", ctx, function(html) {
+        response.send(html); 
       });
     });
-  }, function(html){
-    response.send(html); 
-  }, 5);
+  }, CACHE_TIMES);
 });
 
 var port = process.env.PORT || 3000;

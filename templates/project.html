@@ -1,0 +1,26 @@
+{{>header}}
+
+<div class="row show-grid">
+  <div class="span8">
+  {{#board}}
+    {{{desc_html}}} 
+  </div>
+  <div class="span8">
+    <div class="page-header">
+      <h2>{{name}}</h2>
+    </div>
+    <div class="addthis">
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+<a class="addthis_button_tweet"></a>
+<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-4eef194c168a6ed7"></script>
+<!-- AddThis Button END -->
+    </div>
+  
+  </div>
+  {{/board}}
+</div>
+{{>footer}}

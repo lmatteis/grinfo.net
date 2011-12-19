@@ -5,6 +5,7 @@ margin: 5px 0 15px;
 }
 .topbar-wrapper .topbar {
   position: absolute;
+  margin: 0 -20px;
 }
 .topbar-wrapper .topbar .topbar-inner {
   padding-left: 20px;
