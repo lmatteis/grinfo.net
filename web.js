@@ -67,9 +67,14 @@ function slugify(s) {
 function trim(string) {
   return string.replace(/^\s*|\s*$/g, '')
 }
-function removeMd(str) {
+function metaDescription(str) {
   str = str.replace(/!\[.*\]\(.*\)/, "");
+  str = summary(str, 20);
   return trim(str);
+}
+function replaceURLWithHTMLLinks(text) {
+  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+  return text.replace(exp,"<$1>"); 
 }
 
 var TITLE = "grinfo.net",
@@ -85,7 +90,7 @@ app.get('/', function(request, response) {
       title: TITLE,
     };
     boards.forEach(function(board) {
-      board.desc_html = md.toHTML(summary(board.desc, 30));
+      board.desc_html = md.toHTML(replaceURLWithHTMLLinks(summary(board.desc, 30)));
       board.slug_name = slugify(board.name);
     });
     ctx.boards = boards;
@@ -97,6 +102,7 @@ app.get('/', function(request, response) {
 
 app.get('/project/:id/:slug?', function(request, response) {
   var id = request.params.id;
+  var slug = request.params.slug;
   db("boards", function(key) {
     trello.get("grinfo", function(boards) {
       db.save(key, boards);
@@ -104,13 +110,14 @@ app.get('/project/:id/:slug?', function(request, response) {
   }, function(boards) {
     var ctx = {
       title: TITLE,
+      slug: slug
     };
     boards.forEach(function(board) {
       if(board["_id"] !== id) return;
-      board.desc_html = md.toHTML(board.desc);
+      board.desc_html = md.toHTML(replaceURLWithHTMLLinks(board.desc));
       ctx.board = board;
       ctx.title = board.name + " - " + ctx.title;
-      ctx.description = removeMd(board.desc);
+      ctx.description = metaDescription(board.desc);
       render("./templates/project.html", ctx, function(html) {
         response.send(html); 
       });
