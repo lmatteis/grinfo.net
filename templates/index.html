@@ -1,11 +1,11 @@
 {{>header}}
+
   <div class="row show-grid">
     {{#boards}}
     <div class="span-one-third">
-      <h3><a href="#">{{name}}</a></h3>
-      <p><a href="#"><img src="http://spacehack.org/wp-content/uploads/2009/01/urc2.jpg" /></a></p>
-      <p>{{desc}}</p>
-      <p><a class="btn" href="#">Share your thoughts on this project »</a></p>
+      <h3><a href="/project/{{_id}}/{{name}}">{{name}}</a></h3>
+      <div>{{{desc_html}}}</div>
+      <p><a class="btn" href="/project/{{_id}}/{{name}}">Share your thoughts on this project »</a></p>
     </div>
     {{/boards}}
   </div>

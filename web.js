@@ -1,7 +1,8 @@
 var express = require('express'),
     fs = require("fs"),
     Mustache = require("mustache"),
-    trello = require("node-trello");
+    trello = require("node-trello"),
+    md = require( "markdown" ).markdown;
 
 var app = express.createServer();
 app.use(express.static(__dirname + '/public'));
@@ -46,13 +47,26 @@ db.save = function(key, val) {
 };
 
 
+function summary(str, max) {
+  var result = str;
+  var resultArray = result.split(" ");
+  if(resultArray.length > max){
+    resultArray = resultArray.slice(0, max);
+    result = resultArray.join(" ") + "…";
+  }
+  return result;
+}
+
 app.get('/', function(request, response) {
   db("home", function(key) {
     var ctx = {
       title: "grinfo.net",
     };
-    trello.get("grinfo", function(d) {
-      ctx.boards = d;
+    trello.get("grinfo", function(boards) {
+      boards.forEach(function(board) {
+        board.desc_html = md.toHTML(summary(board.desc, 30));
+      });
+      ctx.boards = boards;
       render("./templates/index.html", ctx, function(html) {
         db.save(key, html);
       });
