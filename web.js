@@ -64,6 +64,13 @@ function slugify(s) {
   s = s.replace(_slugify_hyphenate_re, '-');
   return s;
 }
+function trim(string) {
+  return string.replace(/^\s*|\s*$/g, '')
+}
+function removeMd(str) {
+  str = str.replace(/!\[.*\]\(.*\)/, "");
+  return trim(str);
+}
 
 var TITLE = "grinfo.net",
     CACHE_TIMES = 100;
@@ -103,6 +110,7 @@ app.get('/project/:id/:slug?', function(request, response) {
       board.desc_html = md.toHTML(board.desc);
       ctx.board = board;
       ctx.title = board.name + " - " + ctx.title;
+      ctx.description = removeMd(board.desc);
       render("./templates/project.html", ctx, function(html) {
         response.send(html); 
       });
