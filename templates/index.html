@@ -7,6 +7,9 @@
       <div>{{{desc_html}}}</div>
       <p><a class="btn" href="/project/{{_id}}/{{slug_name}}">Share your thoughts on this project »</a></p>
     </div>
+    {{#is_multiple_of_three}}
+    <div style="clear: both;"></div>
+    {{/is_multiple_of_three}}
     {{/boards}}
   </div>
 

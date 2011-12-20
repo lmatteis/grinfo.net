@@ -87,11 +87,15 @@ app.get('/', function(request, response) {
     });
   }, function(boards){
     var ctx = {
-      title: TITLE,
+      title: TITLE
     };
-    boards.forEach(function(board) {
+    boards.forEach(function(board, idx) {
       board.desc_html = md.toHTML(replaceURLWithHTMLLinks(summary(board.desc, 30)));
       board.slug_name = slugify(board.name);
+      var remainder = (idx+1) % 3;
+      if(remainder === 0) { 
+        board.is_multiple_of_three = true;
+      }
     });
     ctx.boards = boards;
     render("./templates/index.html", ctx, function(html) {
