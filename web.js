@@ -4,6 +4,9 @@ var express = require('express'),
     trello = require("node-trello"),
     md = require( "markdown" ).markdown;
 
+trello.key = "xxx";
+trello.token = "xxx";
+
 var app = express.createServer();
 app.use(express.static(__dirname + '/public'));
 
@@ -82,7 +85,8 @@ var TITLE = "grinfo.net",
 
 app.get('/', function(request, response) {
   db("boards", function(key) {
-    trello.get("grinfo", function(boards) {
+    trello.api("/1/organization/grinfo/boards/all", function(err, boards) {
+      if(err) throw err;
       db.save(key, boards);
     });
   }, function(boards){
@@ -108,7 +112,8 @@ app.get('/project/:id/:slug?', function(request, response) {
   var id = request.params.id;
   var slug = request.params.slug;
   db("boards", function(key) {
-    trello.get("grinfo", function(boards) {
+    trello.api("/1/organization/grinfo/boards/all", function(err, boards) {
+      if(err) throw err;
       db.save(key, boards);
     });
   }, function(boards) {
@@ -117,7 +122,7 @@ app.get('/project/:id/:slug?', function(request, response) {
       slug: slug
     };
     boards.forEach(function(board) {
-      if(board["_id"] !== id) return;
+      if(board["id"] !== id) return;
       board.desc_html = md.toHTML(replaceURLWithHTMLLinks(board.desc));
       ctx.board = board;
       ctx.title = board.name + " - " + ctx.title;
