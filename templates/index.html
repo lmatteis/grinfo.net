@@ -2,6 +2,7 @@
 
   <div class="row show-grid">
     {{#boards}}
+    {{#desc}}
     <div class="span-one-third">
       <h3><a href="/project/{{id}}/{{slug_name}}">{{name}}</a></h3>
       <div>{{{desc_html}}}</div>
@@ -10,6 +11,7 @@
     {{#is_multiple_of_three}}
     <div style="clear: both;"></div>
     {{/is_multiple_of_three}}
+    {{/desc}}
     {{/boards}}
   </div>
 
