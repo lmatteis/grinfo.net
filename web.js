@@ -94,7 +94,7 @@ app.get('/', function(request, response) {
       title: TITLE
     };
     boards = boards.filter(function(board, idx) {
-      if(!boards.desc) return false; 
+      if(!board.desc) return false; 
       board.desc_html = md.toHTML(replaceURLWithHTMLLinks(summary(board.desc, 30)));
       board.slug_name = slugify(board.name);
       var remainder = (idx+1) % 3;
