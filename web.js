@@ -93,8 +93,10 @@ app.get('/', function(request, response) {
     var ctx = {
       title: TITLE
     };
-    boards = boards.filter(function(board, idx) {
+    var idx = 0;
+    boards = boards.filter(function(board) {
       if(!board.desc) return false; 
+      idx++;
       board.desc_html = md.toHTML(replaceURLWithHTMLLinks(summary(board.desc, 30)));
       board.slug_name = slugify(board.name);
       var remainder = (idx+1) % 3;
