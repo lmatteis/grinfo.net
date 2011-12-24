@@ -81,7 +81,7 @@ function replaceURLWithHTMLLinks(text) {
 }
 
 var TITLE = "grinfo.net",
-    CACHE_TIMES = 100;
+    CACHE_TIMES = 5;
 
 app.get('/', function(request, response) {
   db("boards", function(key) {
@@ -94,6 +94,7 @@ app.get('/', function(request, response) {
       title: TITLE
     };
     boards.forEach(function(board, idx) {
+      if(!board.desc) return;
       board.desc_html = md.toHTML(replaceURLWithHTMLLinks(summary(board.desc, 30)));
       board.slug_name = slugify(board.name);
       var remainder = (idx+1) % 3;
