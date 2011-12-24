@@ -96,13 +96,13 @@ app.get('/', function(request, response) {
     var idx = 0;
     boards = boards.filter(function(board) {
       if(!board.desc) return false; 
-      idx++;
       board.desc_html = md.toHTML(replaceURLWithHTMLLinks(summary(board.desc, 30)));
       board.slug_name = slugify(board.name);
       var remainder = (idx+1) % 3;
       if(remainder === 0) { 
         board.is_multiple_of_three = true;
       }
+      idx++;
       return true;
     });
     ctx.boards = boards;
