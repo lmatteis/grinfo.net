@@ -83,6 +83,7 @@ var TITLE = "grinfo.net",
     CACHE_TIMES = 5;
 
 app.get('/', function(request, response) {
+    return console.log("FUCK");
   db("boards", function(key) {
     trello.get("/1/organization/grinfo/boards/all", function(err, boards) {
       //if(err) throw err;
