@@ -4,9 +4,8 @@ var express = require('express'),
     trello = require("node-trello"),
     md = require( "markdown" ).markdown;
 
-trello.key = "xxx";
-trello.token = "xxx";
-
+var token = fs.readFileSync("./trello_token.txt", "utf8");
+var trello = new trello("8c728a811e6428df81fb684834f6479e", token);
 var app = express.createServer();
 app.use(express.static(__dirname + '/public'));
 
@@ -85,8 +84,8 @@ var TITLE = "grinfo.net",
 
 app.get('/', function(request, response) {
   db("boards", function(key) {
-    trello.api("/1/organization/grinfo/boards/all", function(err, boards) {
-      if(err) throw err;
+    trello.get("/1/organization/grinfo/boards/all", function(err, boards) {
+      //if(err) throw err;
       db.save(key, boards);
     });
   }, function(boards){
@@ -116,8 +115,8 @@ app.get('/project/:id/:slug?', function(request, response) {
   var id = request.params.id;
   var slug = request.params.slug;
   db("boards", function(key) {
-    trello.api("/1/organization/grinfo/boards/all", function(err, boards) {
-      if(err) throw err;
+    trello.get("/1/organization/grinfo/boards/all", function(err, boards) {
+      //if(err) throw err;
       db.save(key, boards);
     });
   }, function(boards) {
